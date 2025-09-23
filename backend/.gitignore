@@ -1,0 +1,74 @@
+# Node.js dependencies
+node_modules/
+.pnp/
+.pnp.cjs
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.yarn-cache/
+
+# Build artifacts
+dist/
+build/
+tmp/
+*.tgz
+.DS_Store # macOS specific
+Thumbs.db # Windows specific
+
+# IDE and Editor files
+.idea/ # JetBrains IDEs (IntelliJ, WebStorm, etc.)
+.vscode/ # VS Code (if you want to ignore user-specific settings)
+*.swp # Vim swap files
+*.bak # Backup files
+*.swo # Vim swap files
+
+# Temporary files created by various tools
+coverage/ # Test coverage reports
+*.sqlite
+*.sqlite-journal
+*.sublime-project
+*.sublime-workspace
+
+# For compiled TypeScript (if you plan to use it later)
+*.js
+*.d.ts
+!server.js # Keep server.js if it's your entry point and not compiled output
+!config/
+!controllers/
+!middleware/
+!models/
+!routes/
+
+# If you store any database backups or dumps locally
+# db_dumps/
+# *.sql
+# *.json
+
+# Specific to npm
+npm-debug.log*
+.npm
+
+# Specific to yarn
+.yarn/
+.yarn-integrity
+.yarnrc
+
+# Testing
+/.nyc_output
+/coverage
+/.lcov
+
+# Other
+.DS_Store
