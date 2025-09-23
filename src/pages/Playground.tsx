@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,9 @@ import {
 } from "lucide-react";
 
 const Playground = () => {
+  const [selectedGrid, setSelectedGrid] = useState("5x5");
+  const [selectedSymmetry, setSelectedSymmetry] = useState("6-fold");
+  const [selectedTool, setSelectedTool] = useState("Curve");
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -52,12 +56,17 @@ const Playground = () => {
                       Grid Setup
                     </h4>
                     <div className="grid grid-cols-3 gap-2">
-                      <Button variant="outline" size="sm">3x3</Button>
-                      <Button variant="outline" size="sm" className="gradient-lotus text-white border-0">5x5</Button>
-                      <Button variant="outline" size="sm">7x7</Button>
-                      <Button variant="outline" size="sm">9x9</Button>
-                      <Button variant="outline" size="sm">11x11</Button>
-                      <Button variant="outline" size="sm">13x13</Button>
+                      {["3x3", "5x5", "7x7", "9x9", "11x11", "13x13"].map((grid) => (
+                        <Button 
+                          key={grid}
+                          variant="outline" 
+                          size="sm"
+                          className={selectedGrid === grid ? "gradient-lotus text-white border-0" : ""}
+                          onClick={() => setSelectedGrid(grid)}
+                        >
+                          {grid}
+                        </Button>
+                      ))}
                     </div>
                   </div>
 
@@ -67,15 +76,27 @@ const Playground = () => {
                   <div>
                     <h4 className="font-semibold mb-3">Shapes</h4>
                     <div className="space-y-2">
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button 
+                        variant="outline" 
+                        className={`w-full justify-start ${selectedTool === "Line" ? "gradient-sacred text-white border-0" : ""}`}
+                        onClick={() => setSelectedTool("Line")}
+                      >
                         <Minus className="h-4 w-4 mr-2" />
                         Line
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button 
+                        variant="outline" 
+                        className={`w-full justify-start ${selectedTool === "Circle" ? "gradient-sacred text-white border-0" : ""}`}
+                        onClick={() => setSelectedTool("Circle")}
+                      >
                         <Circle className="h-4 w-4 mr-2" />
                         Circle
                       </Button>
-                      <Button variant="outline" className="w-full justify-start gradient-sacred text-white border-0">
+                      <Button 
+                        variant="outline" 
+                        className={`w-full justify-start ${selectedTool === "Curve" ? "gradient-sacred text-white border-0" : ""}`}
+                        onClick={() => setSelectedTool("Curve")}
+                      >
                         <Palette className="h-4 w-4 mr-2" />
                         Curve
                       </Button>
@@ -88,9 +109,17 @@ const Playground = () => {
                   <div>
                     <h4 className="font-semibold mb-3">Symmetry</h4>
                     <div className="space-y-2">
-                      <Button variant="outline" size="sm" className="w-full">4-fold</Button>
-                      <Button variant="outline" size="sm" className="w-full gradient-lotus text-white border-0">6-fold</Button>
-                      <Button variant="outline" size="sm" className="w-full">8-fold</Button>
+                      {["4-fold", "6-fold", "8-fold"].map((symmetry) => (
+                        <Button 
+                          key={symmetry}
+                          variant="outline" 
+                          size="sm" 
+                          className={`w-full ${selectedSymmetry === symmetry ? "gradient-lotus text-white border-0" : ""}`}
+                          onClick={() => setSelectedSymmetry(symmetry)}
+                        >
+                          {symmetry}
+                        </Button>
+                      ))}
                     </div>
                   </div>
 

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sparkles, Image, Download, Settings } from "lucide-react";
 
 const Generator = () => {
+  const [selectedSymmetry, setSelectedSymmetry] = useState("6-fold");
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -87,9 +89,30 @@ const Generator = () => {
                     <div>
                       <label className="text-sm font-medium mb-2 block">Symmetry</label>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">4-fold</Button>
-                        <Button variant="outline" size="sm" className="gradient-lotus text-white border-0">6-fold</Button>
-                        <Button variant="outline" size="sm">8-fold</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className={selectedSymmetry === "4-fold" ? "gradient-lotus text-white border-0" : ""}
+                          onClick={() => setSelectedSymmetry("4-fold")}
+                        >
+                          4-fold
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className={selectedSymmetry === "6-fold" ? "gradient-lotus text-white border-0" : ""}
+                          onClick={() => setSelectedSymmetry("6-fold")}
+                        >
+                          6-fold
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className={selectedSymmetry === "8-fold" ? "gradient-lotus text-white border-0" : ""}
+                          onClick={() => setSelectedSymmetry("8-fold")}
+                        >
+                          8-fold
+                        </Button>
                       </div>
                     </div>
                     
