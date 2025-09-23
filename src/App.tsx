@@ -9,6 +9,7 @@ import Generator from "./pages/Generator";
 import Playground from "./pages/Playground";
 import Learn from "./pages/Learn";
 import Marketplace from "./pages/Marketplace";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/playground" element={<Playground />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/login" element={<Login />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

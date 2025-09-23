@@ -58,14 +58,16 @@ export const Navigation = () => {
           {/* Profile & Mobile Menu Button */}
           <div className="flex items-center space-x-4">
             {/* Profile Avatar */}
-            <Button variant="ghost" size="sm" className="rounded-full p-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="/placeholder-user.jpg" />
-                <AvatarFallback className="gradient-sacred text-white">
-                  <User className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
-            </Button>
+            <Link to="/login">
+              <Button variant="ghost" size="sm" className="rounded-full p-2 hover:bg-primary/10">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src="/placeholder-user.jpg" />
+                  <AvatarFallback className="gradient-sacred text-white">
+                    <User className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <Button
