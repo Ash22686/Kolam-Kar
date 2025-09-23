@@ -2,41 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* KolamKar Design System - Cultural aesthetics inspired by Kolam and Rangoli art */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Core backgrounds */
+    --background: 220 25% 97%;
+    --foreground: 230 15% 15%;
 
+    /* Card system */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 230 15% 15%;
 
+    /* Popover system */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 230 15% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Deep cultural blue */
+    --primary: 220 45% 25%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 220 65% 45%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Warm lotus orange */
+    --secondary: 15 85% 60%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Accent - Sacred red */
+    --accent: 350 75% 55%;
+    --accent-foreground: 0 0% 98%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Muted tones */
+    --muted: 220 15% 94%;
+    --muted-foreground: 230 10% 45%;
 
+    /* Destructive */
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* UI elements */
+    --border: 220 15% 88%;
+    --input: 220 15% 94%;
+    --ring: 220 45% 45%;
 
-    --radius: 0.5rem;
+    /* Cultural gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(220 50% 15%) 0%, hsl(240 60% 25%) 50%, hsl(220 45% 35%) 100%);
+    --gradient-lotus: linear-gradient(135deg, hsl(15 85% 60%) 0%, hsl(25 90% 65%) 50%, hsl(35 80% 55%) 100%);
+    --gradient-sacred: linear-gradient(135deg, hsl(350 75% 55%) 0%, hsl(340 80% 60%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 20% 98%) 100%);
+
+    /* Shadows with cultural warmth */
+    --shadow-soft: 0 4px 20px -4px hsl(220 45% 25% / 0.1);
+    --shadow-medium: 0 8px 30px -8px hsl(220 45% 25% / 0.15);
+    --shadow-lotus: 0 10px 40px -10px hsl(15 85% 60% / 0.25);
+    --shadow-glow: 0 0 40px hsl(220 65% 45% / 0.3);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -91,6 +115,54 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+/* Custom utility classes for KolamKar */
+@layer components {
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-lotus {
+    background: var(--gradient-lotus);
+  }
+  
+  .gradient-sacred {
+    background: var(--gradient-sacred);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-lotus {
+    box-shadow: var(--shadow-lotus);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-spring {
+    transition: var(--transition-spring);
+  }
+  
+  .kolam-pattern {
+    background-image: radial-gradient(circle at 25% 25%, hsl(220 65% 45% / 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 75% 75%, hsl(15 85% 60% / 0.1) 0%, transparent 50%);
   }
 }
 
