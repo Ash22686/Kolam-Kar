@@ -1,0 +1,7 @@
+.kolam-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+  /* background-color: #1a1a1a; Remove background color from here to let parent control it */
+}

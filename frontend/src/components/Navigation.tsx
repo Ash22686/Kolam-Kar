@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
-import kolamIcon from "@/assets/kolam-icon.png";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 
 export const Navigation = () => {
@@ -22,16 +21,13 @@ export const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Determine if the navbar should be transparent based on the route
   const isHomePage = location.pathname === '/';
 
-  // Effect to check for authentication token
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  }, [location.pathname]); // Re-check on route change
+  }, [location.pathname]);
 
-  // Effect for scroll-based background change
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -41,11 +37,10 @@ export const Navigation = () => {
       window.addEventListener("scroll", handleScroll);
     }
     
-    // Cleanup
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isHomePage]); // Only add listener on the homepage
+  }, [isHomePage]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -62,7 +57,6 @@ export const Navigation = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Dynamic navbar classes
   const navClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out ${
     isHomePage && !isScrolled
       ? 'bg-transparent'
@@ -76,17 +70,16 @@ export const Navigation = () => {
     <nav className={navClasses}>
       <div className="container mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-full p-2 gradient-lotus shadow-medium group-hover:shadow-lotus transition-all duration-300">
-              <img src={kolamIcon} alt="KolamKar" className="w-full h-full object-contain" />
+            {/* MODIFIED PART: Removed background, padding, and shadow classes */}
+            <div className="w-10 h-10 transition-all duration-300">
+              <img src={"/logo.png"} alt="KolamKar" className="w-full h-full object-contain" />
             </div>
             <span className={`text-xl font-bold transition-colors ${isHomePage && !isScrolled ? 'text-white' : 'text-primary'}`}>
               KolamKar
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
@@ -104,7 +97,6 @@ export const Navigation = () => {
             ))}
           </div>
 
-          {/* Auth buttons and Profile Dropdown */}
           <div className="flex items-center space-x-2">
             {isLoggedIn ? (
               <DropdownMenu>
@@ -149,7 +141,6 @@ export const Navigation = () => {
               </div>
             )}
             
-            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="sm"
@@ -161,7 +152,6 @@ export const Navigation = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden absolute top-16 left-0 right-0 bg-card border-b border-border shadow-medium animate-slide-up">
             <div className="px-4 py-4 space-y-2">
