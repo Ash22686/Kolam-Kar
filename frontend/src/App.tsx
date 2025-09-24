@@ -11,6 +11,7 @@ import Learn from "./pages/Learn";
 import Marketplace from "./pages/Marketplace";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Feed from "./pages/Feed";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/analyser" element={<Analyser />} />
           <Route path="/generator" element={<Generator />} />
           <Route path="/playground" element={<Playground />} />
+          <Route path="/feed" element={<Feed />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/login" element={<Login />} />
