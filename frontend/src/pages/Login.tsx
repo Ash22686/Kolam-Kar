@@ -102,7 +102,7 @@ const Login = () => {
           <div className="text-center mb-8">
             <div className="inline-flex items-center space-x-3 mb-4">
               <div className="w-12 h-12 rounded-full p-2 gradient-lotus shadow-lotus">
-                <img src={kolamIcon} alt="KolamKar" className="w-full h-full object-contain" />
+                <img src={"/logo.png"} alt="KolamKar" className="w-full h-full object-contain" />
               </div>
               <span className="text-2xl font-bold text-primary">KolamKar</span>
             </div>
