@@ -1,3 +1,4 @@
+// Navigation.tsx
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -57,6 +58,7 @@ export const Navigation = () => {
     { name: "Analyser", path: "/analyser" },
     { name: "Generator", path: "/generator" },
     { name: "Playground", path: "/playground" },
+    { name: "Feed", path: "/feed" },
     { name: "Marketplace", path: "/marketplace" },
   ];
 
