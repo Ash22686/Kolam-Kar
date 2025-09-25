@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,6 +8,60 @@ import { Badge } from "@/components/ui/badge";
 import { Upload, Search, Download, Zap } from "lucide-react";
 
 const Analyser = () => {
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState(null);
+  const fileInputRef = useRef(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+      setResults(null);
+    }
+  };
+
+  const handleChooseFile = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFile(e.dataTransfer.files[0]);
+      setResults(null);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) return;
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/math_analysis", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || "Failed to analyse image");
+      }
+
+      const data = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error(error);
+      alert("Error analyzing the image");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -37,19 +94,51 @@ const Analyser = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="border-2 border-dashed border-border rounded-lg p-12 text-center hover:border-primary/50 transition-colors cursor-pointer">
+                  <div
+                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors cursor-pointer ${
+                      dragOver ? "border-primary/70 bg-primary/10" : "border-border"
+                    }`}
+                    onClick={handleChooseFile}
+                    onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                    onDragLeave={() => setDragOver(false)}
+                    onDrop={handleDrop}
+                  >
                     <Upload className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <h3 className="text-lg font-semibold mb-2">Drop your image here</h3>
                     <p className="text-muted-foreground mb-4">or click to browse files</p>
-                    <Button className="gradient-lotus text-white border-0">
+
+                    {/* Hidden file input */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+
+                    <Button
+                      className="gradient-lotus text-white border-0 w-full cursor-pointer mt-2"
+                      onClick={handleChooseFile}
+                    >
                       Choose File
                     </Button>
+
+                    {file && (
+                      <p className="mt-2 text-sm text-muted-foreground">{file.name}</p>
+                    )}
                   </div>
+
                   <div className="mt-6 space-y-2 text-sm text-muted-foreground">
                     <p>• Supports JPG, PNG, WEBP formats</p>
                     <p>• Maximum file size: 10MB</p>
                     <p>• Best results with clear, high-contrast images</p>
                   </div>
+
+                  {file && (
+                    <Button className="w-full mt-6" onClick={handleUpload} disabled={loading}>
+                      {loading ? "Analyzing..." : "Analyze Kolam"}
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 
@@ -62,31 +151,45 @@ const Analyser = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Search className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg mb-2">Upload an image to see analysis</p>
-                    <p className="text-sm">We'll detect patterns, symmetry, and cultural elements</p>
-                  </div>
-                  
-                  <div className="space-y-4 opacity-50">
-                    <div className="p-4 rounded-lg bg-muted/50">
-                      <h4 className="font-semibold mb-2">Pattern Recognition</h4>
-                      <p className="text-sm text-muted-foreground">Identifying geometric patterns and motifs...</p>
+                  {results ? (
+                    <div className="space-y-6 text-center">
+                      <div>
+                        <h4 className="font-semibold mb-2">Symmetry Analysis</h4>
+                        <img
+                          src={results.symmetry}
+                          alt="Symmetry Analysis"
+                          className="mx-auto border rounded-lg"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-2">Fractal Dimension</h4>
+                        <img
+                          src={results.fractal_dimension}
+                          alt="Fractal Dimension"
+                          className="mx-auto border rounded-lg"
+                        />
+                      </div>
+                      <Button
+                        className="w-full mt-6"
+                        variant="outline"
+                        onClick={() => {
+                          const a = document.createElement("a");
+                          a.href = results.symmetry;
+                          a.download = "symmetry.png";
+                          a.click();
+                        }}
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Download Symmetry Analysis
+                      </Button>
                     </div>
-                    <div className="p-4 rounded-lg bg-muted/50">
-                      <h4 className="font-semibold mb-2">Symmetry Analysis</h4>
-                      <p className="text-sm text-muted-foreground">Detecting rotational and reflective symmetries...</p>
+                  ) : (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <Search className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                      <p className="text-lg mb-2">Upload an image to see analysis</p>
+                      <p className="text-sm">We'll detect patterns, symmetry, and cultural elements</p>
                     </div>
-                    <div className="p-4 rounded-lg bg-muted/50">
-                      <h4 className="font-semibold mb-2">Cultural Context</h4>
-                      <p className="text-sm text-muted-foreground">Understanding traditional significance...</p>
-                    </div>
-                  </div>
-
-                  <Button className="w-full mt-6" variant="outline" disabled>
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Analysis Report
-                  </Button>
+                  )}
                 </CardContent>
               </Card>
             </div>

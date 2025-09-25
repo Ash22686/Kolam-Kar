@@ -1,0 +1,58 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environment directories
+venv/
+env/
+ENV/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Python-specific
+*.log
+*.pot
+*.pyc
+*.pyo
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Environment variables files
+.env
+.env.*
+*.env
+
+# PyInstaller
+*.spec
+
+# Test directories
+test/
+tests/
+
+# Coverage reports
+.coverage
+coverage.xml
+*.cover
+
+# Flask / Django settings
+*.sqlite3
+db.sqlite3
+
+# Others
+*.bak
+*.tmp

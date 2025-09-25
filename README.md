@@ -76,7 +76,19 @@ You will need the following software installed on your machine:
         ```
     -   The server will now be running and listening on **`http://localhost:5000`**.
 
-3.  **Setup the Frontend Application:**
+3. **Run the API**
+    To run the GenAI and math analysis APIs, **Open a new terminal window**.
+
+    -   Navigate to the apis directory from the project root:
+        ```bash
+        cd backend/apis
+        ```
+    -   Start the api:
+        ```bash
+        uvicorn app:app --reload
+        ```
+
+4.  **Setup the Frontend Application:**
 
     Now, let's get the React user interface running. **Open a new terminal window** for this step.
 
