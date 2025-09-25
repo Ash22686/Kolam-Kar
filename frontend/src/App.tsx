@@ -8,7 +8,7 @@ import Analyser from "./pages/Analyser";
 import Generator from "./pages/Generator";
 import Playground from "./pages/Playground";
 import Learn from "./pages/Learn";
-import Marketplace from "./pages/Marketplace";
+import Resourses from "./pages/Resources";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Feed from "./pages/Feed";
@@ -28,7 +28,7 @@ const App = () => (
           <Route path="/playground" element={<Playground />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/learn" element={<Learn />} />
-          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/resources" element={<Resourses />} />
           <Route path="/login" element={<Login />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

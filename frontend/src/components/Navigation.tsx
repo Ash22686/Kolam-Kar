@@ -54,7 +54,7 @@ export const Navigation = () => {
     { name: "Generator", path: "/generator" },
     { name: "Playground", path: "/playground" },
     { name: "Feed", path: "/feed" },
-    { name: "Marketplace", path: "/marketplace" },
+    { name: "Resources", path: "/resources" },
   ];
 
   const isActive = (path) => location.pathname === path;
