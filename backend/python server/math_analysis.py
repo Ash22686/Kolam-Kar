@@ -160,4 +160,3 @@ def fractal_dimension_boxcount(image_path, threshold=128):
     pil_img = Image.open(buf)
 
     return pil_img
-
