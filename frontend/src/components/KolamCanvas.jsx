@@ -1,4 +1,4 @@
-import React, { useEffect, useState, forwardRef } from 'react';
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { applySymmetry } from './utils/symmetry';
 import './KolamCanvas.css';
 
@@ -7,22 +7,67 @@ const SNAP_THRESHOLD = 25;
 const KolamCanvas = forwardRef(({
   drawMode, grid, symmetry, tool, color, thickness, paths, onDrawEnd
 }, ref) => {
+  const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentPath, setCurrentPath] = useState([]);
   const [dots, setDots] = useState([]);
   const [startPoint, setStartPoint] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
+  useImperativeHandle(ref, () => ({
+    exportAsPNG: (withDots) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+      
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = canvas.width;
+      exportCanvas.height = canvas.height;
+      const ctx = exportCanvas.getContext('2d');
+      const center = { x: canvas.width / 2, y: canvas.height / 2 };
+
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+
+      if (withDots) {
+        ctx.fillStyle = '#4a4a4a';
+        dots.forEach(dot => {
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, 3, 0, 2 * Math.PI);
+          ctx.fill();
+        });
+      }
+
+      paths.forEach(path => {
+        ctx.strokeStyle = path.color;
+        ctx.lineWidth = path.thickness;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        const symmetricalPaths = applySymmetry(path.points, path.symmetry, center);
+        symmetricalPaths.forEach(symPath => {
+          if (path.tool === 'Circle' && symPath.length === 1) {
+            const radius = Math.abs(path.radius);
+            ctx.beginPath();
+            ctx.arc(symPath[0].x, symPath[0].y, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+          } else {
+            ctx.beginPath();
+            symPath.forEach((point, index) => (index === 0) ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y));
+            ctx.stroke();
+          }
+        });
+      });
+      
+      return exportCanvas.toDataURL('image/png');
+    }
+  }), [dots, paths]);
+
   const getMousePos = (e) => {
-    const canvas = ref.current;
+    const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-    return {
-      x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY
-    };
+    return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
   };
 
   const findNearestDot = (x, y) => {
@@ -30,16 +75,14 @@ const KolamCanvas = forwardRef(({
     let minDistance = Infinity;
     for (const dot of dots) {
       const distance = Math.sqrt((x - dot.x) ** 2 + (y - dot.y) ** 2);
-      if (distance < minDistance) {
+      if (distance < minDistance && distance < SNAP_THRESHOLD) {
         minDistance = distance;
         nearestDot = dot;
       }
     }
-    // Return the nearest dot only if it's within the snap threshold for user interaction
-    // For internal calculations, we might want the absolute nearest one regardless of distance.
-    return minDistance < SNAP_THRESHOLD ? nearestDot : null;
+    return nearestDot;
   };
-  
+
   const findAbsoluteNearestDot = (x, y) => {
     if (dots.length === 0) return null;
     let nearestDot = dots[0];
@@ -97,7 +140,7 @@ const KolamCanvas = forwardRef(({
   };
   
   useEffect(() => {
-    const canvas = ref.current;
+    const canvas = canvasRef.current;
     if (!canvas) return;
     const gridSize = parseInt(grid.split('x')[0]);
     const padding = 60;
@@ -109,10 +152,10 @@ const KolamCanvas = forwardRef(({
     }));
     setDots(newDots);
     setStartPoint(null);
-  }, [grid, ref]);
+  }, [grid]);
 
   useEffect(() => {
-    const canvas = ref.current;
+    const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const center = { x: canvas.width / 2, y: canvas.height / 2 };
@@ -128,7 +171,6 @@ const KolamCanvas = forwardRef(({
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
 
-      // --- NEW LOGIC FOR PULLI KOLAM ---
       if (path.tool === 'Line' && path.points.length === 2) {
         const symmetricalStarts = applySymmetry([path.points[0]], path.symmetry, center);
         const symmetricalEnds = applySymmetry([path.points[1]], path.symmetry, center);
@@ -144,7 +186,7 @@ const KolamCanvas = forwardRef(({
             ctx.stroke();
           }
         }
-      } else { // Fallback to old logic for freehand and circles
+      } else {
         const symmetricalPaths = applySymmetry(path.points, path.symmetry, center);
         symmetricalPaths.forEach(symPath => {
           if (path.tool === 'Circle' && symPath.length === 1) {
@@ -204,11 +246,11 @@ const KolamCanvas = forwardRef(({
       ctx.arc(snappedDotForIndicator.x, snappedDotForIndicator.y, 10, 0, 2 * Math.PI);
       ctx.stroke();
     }
-  }, [paths, currentPath, dots, color, thickness, symmetry, drawMode, startPoint, mousePos, ref]);
+  }, [paths, currentPath, dots, color, thickness, symmetry, drawMode, startPoint, mousePos]);
 
   return (
     <canvas
-      ref={ref}
+      ref={canvasRef}
       width={800}
       height={800}
       className="kolam-canvas"

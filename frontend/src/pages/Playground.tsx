@@ -4,6 +4,12 @@ import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import KolamCanvas from "@/components/KolamCanvas";
 import {
   Undo2, Redo2, Download, Save, Grid3X3, Circle,
@@ -15,7 +21,7 @@ const Playground = () => {
   const [selectedGrid, setSelectedGrid] = useState("7x7");
   const [selectedSymmetry, setSelectedSymmetry] = useState("6-fold");
   const [selectedTool, setSelectedTool] = useState("Line");
-  const [color, setColor] = useState("#FFFFFF");
+  const [color, setColor] = useState("#000000");
   const [thickness, setThickness] = useState(4);
   const [history, setHistory] = useState([]);
   const [undoStack, setUndoStack] = useState([]);
@@ -46,13 +52,15 @@ const Playground = () => {
     setUndoStack([]);
   };
 
-  const handleDownload = () => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const link = document.createElement('a');
-      link.download = 'kolam-design.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+  const handleDownload = (withDots) => {
+    if (canvasRef.current) {
+      const dataUrl = canvasRef.current.exportAsPNG(withDots);
+      if (dataUrl) {
+        const link = document.createElement('a');
+        link.download = `kolam-design-${withDots ? 'with-dots' : 'no-dots'}.png`;
+        link.href = dataUrl;
+        link.click();
+      }
     }
   };
 
@@ -90,12 +98,8 @@ const Playground = () => {
                   <div>
                     <h4 className="font-semibold mb-3 text-gray-800 dark:text-gray-200">Mode</h4>
                     <div className="grid grid-cols-2 gap-2">
-                      <Button variant={drawMode === 'point-to-point' ? "default" : "outline"} onClick={() => setDrawMode('point-to-point')} className={drawMode === 'point-to-point' ? 'bg-indigo-600 text-white' : ''}>
-                        <MousePointer className="h-4 w-4 mr-2" />Point
-                      </Button>
-                      <Button variant={drawMode === 'freehand' ? "default" : "outline"} onClick={() => setDrawMode('freehand')} className={drawMode === 'freehand' ? 'bg-indigo-600 text-white' : ''}>
-                        <Spline className="h-4 w-4 mr-2" />Freehand
-                      </Button>
+                      <Button variant={drawMode === 'point-to-point' ? "default" : "outline"} onClick={() => setDrawMode('point-to-point')} className={drawMode === 'point-to-point' ? 'bg-indigo-600 text-white' : ''}><MousePointer className="h-4 w-4 mr-2" />Point</Button>
+                      <Button variant={drawMode === 'freehand' ? "default" : "outline"} onClick={() => setDrawMode('freehand')} className={drawMode === 'freehand' ? 'bg-indigo-600 text-white' : ''}><Spline className="h-4 w-4 mr-2" />Freehand</Button>
                     </div>
                   </div>
                   <Separator />
@@ -146,22 +150,14 @@ const Playground = () => {
               <div className="lg:col-span-3 space-y-6">
                 <Card className="shadow-lg border-gray-200 dark:border-gray-800 bg-white dark:bg-card">
                   <CardContent className="p-2 sm:p-4">
-                    <div className="aspect-square bg-gray-100 dark:bg-card border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden relative">
-                      
+                    <div className="aspect-square bg-white dark:bg-card border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden relative">
                       <div className="absolute top-4 right-4 z-10 flex gap-2">
-                        <Button variant="outline" size="icon" onClick={handleUndo} disabled={history.length === 0}>
-                          <Undo2 className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="icon" onClick={handleRedo} disabled={undoStack.length === 0}>
-                          <Redo2 className="h-4 w-4" />
-                        </Button>
-                        <Button variant="destructive" size="icon" onClick={handleClear} disabled={history.length === 0}>
-                          <RotateCcw className="h-4 w-4" />
-                        </Button>
+                        <Button variant="outline" size="icon" onClick={handleUndo} disabled={history.length === 0}><Undo2 className="h-4 w-4" /></Button>
+                        <Button variant="outline" size="icon" onClick={handleRedo} disabled={undoStack.length === 0}><Redo2 className="h-4 w-4" /></Button>
+                        <Button variant="destructive" size="icon" onClick={handleClear} disabled={history.length === 0}><RotateCcw className="h-4 w-4" /></Button>
                       </div>
-                      
                       <KolamCanvas
-                        ref={canvasRef} 
+                        ref={canvasRef}
                         drawMode={drawMode}
                         grid={selectedGrid}
                         symmetry={selectedSymmetry}
@@ -177,7 +173,19 @@ const Playground = () => {
                 <Card className="shadow-lg border-gray-200 dark:border-gray-800 bg-white dark:bg-card">
                   <CardContent className="p-4 flex flex-wrap gap-3">
                     <Button className="bg-indigo-600 hover:bg-indigo-700 text-white" onClick={handleSave}><Save className="h-4 w-4 mr-2" />Save Design</Button>
-                    <Button variant="outline" onClick={handleDownload}><Download className="h-4 w-4 mr-2" />Download PNG</Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline"><Download className="h-4 w-4 mr-2" />Download PNG</Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => handleDownload(true)}>
+                          With Grid Dots
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleDownload(false)}>
+                          Without Grid Dots
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                     <Button variant="outline"><Share2 className="h-4 w-4 mr-2" />Share</Button>
                   </CardContent>
                 </Card>
