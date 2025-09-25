@@ -12,7 +12,7 @@ import Marketplace from "./pages/Marketplace";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Feed from "./pages/Feed";
-
+import Chatbot from "./components/chatbot";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -33,6 +33,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Chatbot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

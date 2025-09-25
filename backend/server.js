@@ -1,13 +1,13 @@
+require('dotenv').config();
 const express = require('express');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
-const postRoutes = require("./routes/postRoutes");
-
+const chatbotRoutes = require('./routes/chatbot');
 // Load environment variables
-dotenv.config();
-
+// dotenv.config();
+console.log('My Gemini API Key is:', process.env.GOOGLE_GEMINI_API_KEY);
 // Connect to MongoDB
 connectDB();
 
@@ -19,7 +19,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use("/api/posts", postRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 const PORT = process.env.PORT || 5000;
 
