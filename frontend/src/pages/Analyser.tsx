@@ -95,9 +95,8 @@ const Analyser = () => {
                 </CardHeader>
                 <CardContent>
                   <div
-                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors cursor-pointer ${
-                      dragOver ? "border-primary/70 bg-primary/10" : "border-border"
-                    }`}
+                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors cursor-pointer ${dragOver ? "border-primary/70 bg-primary/10" : "border-border"
+                      }`}
                     onClick={handleChooseFile}
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                     onDragLeave={() => setDragOver(false)}
@@ -116,12 +115,17 @@ const Analyser = () => {
                       className="hidden"
                     />
 
+                    {/* CORRECTED BUTTON */}
                     <Button
                       className="gradient-lotus text-white border-0 w-full cursor-pointer mt-2"
-                      onClick={handleChooseFile}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevents the click from reaching the parent div
+                        handleChooseFile();
+                      }}
                     >
                       Choose File
                     </Button>
+                    {/* END OF CORRECTION */}
 
                     {file && (
                       <p className="mt-2 text-sm text-muted-foreground">{file.name}</p>
